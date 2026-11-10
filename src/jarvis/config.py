@@ -7,6 +7,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 from dotenv import load_dotenv
 
+from .secret_store import resolve_secret, resolve_secrets
+
 
 # ============================================================================
 # SUPPORTED CHAT MODELS - Single Source of Truth
@@ -731,7 +733,7 @@ def load_settings() -> Settings:
     if llm_provider not in ("ollama", "openai_compatible"):
         llm_provider = "ollama"
     llm_base_url = str(merged.get("llm_base_url", "") or "").strip() or ollama_base_url
-    llm_api_key = str(merged.get("llm_api_key", "") or "").strip()
+    llm_api_key = str(resolve_secret(merged.get("llm_api_key", "")) or "").strip()
     if llm_provider == "openai_compatible":
         llm_chat_model = str(merged.get("llm_chat_model", "") or "").strip() or ollama_chat_model
     else:
@@ -741,7 +743,7 @@ def load_settings() -> Settings:
         embedding_provider_raw = ""
     embedding_provider = embedding_provider_raw
     embedding_base_url = str(merged.get("embedding_base_url", "") or "").strip()
-    embedding_api_key = str(merged.get("embedding_api_key", "") or "").strip()
+    embedding_api_key = str(resolve_secret(merged.get("embedding_api_key", "")) or "").strip()
     # Effective embedding provider inherits the chat provider when unset.
     _effective_embed_provider = embedding_provider or llm_provider
     if _effective_embed_provider == "openai_compatible":
@@ -869,14 +871,14 @@ def load_settings() -> Settings:
     location_auto_detect = bool(merged.get("location_auto_detect", True))
     location_cgnat_resolve_public_ip = bool(merged.get("location_cgnat_resolve_public_ip", True))
     web_search_enabled = bool(merged.get("web_search_enabled", True))
-    brave_search_api_key = str(merged.get("brave_search_api_key", "") or "").strip()
+    brave_search_api_key = str(resolve_secret(merged.get("brave_search_api_key", "")) or "").strip()
     wikipedia_fallback_enabled = bool(merged.get("wikipedia_fallback_enabled", True))
     dictation_enabled = bool(merged.get("dictation_enabled", True))
     dictation_hotkey = str(merged.get("dictation_hotkey", _default_dictation_hotkey())).strip()
     dictation_filler_removal = bool(merged.get("dictation_filler_removal", False))
     raw_dict = merged.get("dictation_custom_dictionary", [])
     dictation_custom_dictionary = list(raw_dict) if isinstance(raw_dict, list) else []
-    mcps = _ensure_dict(merged.get("mcps"))
+    mcps = resolve_secrets(_ensure_dict(merged.get("mcps")))
     whisper_min_confidence = float(merged.get("whisper_min_confidence", 0.4))
     whisper_no_speech_threshold = float(merged.get("whisper_no_speech_threshold", 0.5))
     whisper_min_audio_duration = float(merged.get("whisper_min_audio_duration", 0.3))
