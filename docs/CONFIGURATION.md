@@ -286,6 +286,32 @@ See [full MCP setup guide](#mcp-integrations) below.
 
 </details>
 
+## Secrets in the system keyring
+
+API keys and tokens can live in the operating system credential store (Windows Credential Manager, macOS Keychain, Secret Service on Linux) instead of `config.json`. The config file then holds only a reference.
+
+1. Store the secret. The value is typed at a hidden prompt:
+   ```bash
+   python -m jarvis.secret_store set ha_token
+   ```
+2. Use the reference it prints wherever the secret belongs:
+   ```json
+   {
+     "llm_api_key": "keyring:jarvis/llm",
+     "mcps": {
+       "home_assistant": {
+         "command": "mcp-proxy",
+         "args": ["http://localhost:8123/mcp_server/sse"],
+         "env": { "API_ACCESS_TOKEN": "keyring:jarvis/ha_token" }
+       }
+     }
+   }
+   ```
+
+References work in `llm_api_key`, `embedding_api_key`, `brave_search_api_key` and in any string inside an `mcps` entry (`env`, `args`, headers). A reference that cannot be resolved is treated as an empty value. Remove a secret with `python -m jarvis.secret_store delete ha_token`.
+
+The keyring protects secrets from leaking through backups, synced folders and shared config files. Programs running under your own user account can still read them, so give each token only the access it needs.
+
 ## MCP Integrations
 
 > **Session persistence:** each MCP server is launched once and its stdio session is kept open across tool calls. Stateful servers (e.g. browser automation, where the server owns a long-running Chrome process) work correctly. If you have a server you'd rather not keep resident, set `"idle_timeout_sec": 300` on its config entry and Jarvis will free it after that long without activity. If a server's tools legitimately run long (e.g. delegating a task to an external CLI agent), set `"timeout_sec": 600` to raise its 120-second default call timeout.

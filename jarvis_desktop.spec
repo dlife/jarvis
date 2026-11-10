@@ -97,6 +97,12 @@ hiddenimports = [
     'jarvis.daemon',
     'jarvis.config',
     'jarvis.debug',
+    'jarvis.secret_store',
+    'keyring',
+    'keyring.backends.Windows',
+    'keyring.backends.macOS',
+    'keyring.backends.SecretService',
+    'win32ctypes.core',
     'jarvis.llm',
     'jarvis.main',
     # Desktop app modules
