@@ -111,5 +111,7 @@
   "dictation_filler_removal": false,
   "dictation_thinking_enabled": false,
   "dictation_custom_dictionary": [],
+  "reply_language": "",
+  "system_prompt_extra": "",
   "mcps": {}
 }

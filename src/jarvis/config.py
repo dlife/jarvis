@@ -288,6 +288,8 @@ class Settings:
     dictation_custom_dictionary: list
 
     # MCP Integration
+    reply_language: str
+    system_prompt_extra: str
     mcps: Dict[str, Any]
 
 
@@ -673,6 +675,11 @@ def get_default_config() -> Dict[str, Any]:
         "dictation_custom_dictionary": [],
 
         # MCP Integration (external servers Jarvis can use). No defaults.
+        # Reply language and extra instructions for the chat model's system
+        # message. An empty reply_language keeps the built-in behaviour
+        # (English when the text-to-speech engine is Piper or Chatterbox).
+        "reply_language": "",
+        "system_prompt_extra": "",
         "mcps": {},
     }
 
@@ -879,6 +886,8 @@ def load_settings() -> Settings:
     raw_dict = merged.get("dictation_custom_dictionary", [])
     dictation_custom_dictionary = list(raw_dict) if isinstance(raw_dict, list) else []
     mcps = resolve_secrets(_ensure_dict(merged.get("mcps")))
+    reply_language = str(merged.get("reply_language", "") or "").strip()
+    system_prompt_extra = str(merged.get("system_prompt_extra", "") or "").strip()
     whisper_min_confidence = float(merged.get("whisper_min_confidence", 0.4))
     whisper_no_speech_threshold = float(merged.get("whisper_no_speech_threshold", 0.5))
     whisper_min_audio_duration = float(merged.get("whisper_min_audio_duration", 0.3))
@@ -1016,4 +1025,6 @@ def load_settings() -> Settings:
 
         # MCP Integration
         mcps=mcps,
+        reply_language=reply_language,
+        system_prompt_extra=system_prompt_extra,
     )

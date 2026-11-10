@@ -92,6 +92,8 @@ class MockConfig:
     stop_command_fuzzy_ratio: float = field(default_factory=lambda: get_default_config()["stop_command_fuzzy_ratio"])
     dictation_hotkey: str = "ctrl+alt+space"
     mcps: Dict[str, Any] = field(default_factory=dict)
+    reply_language: str = ""
+    system_prompt_extra: str = ""
     use_stdin: bool = True
 
     def __post_init__(self) -> None:
