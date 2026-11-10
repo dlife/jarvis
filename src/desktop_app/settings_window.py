@@ -118,6 +118,15 @@ def _build_field_metadata() -> List[FieldMeta]:
       "llm", "choice", choices=model_choices)
     f("ollama_embed_model", "Embedding Model", "Model for text embeddings",
       "llm", "str")
+    f("reply_language", "Reply Language",
+      "Language the assistant replies in, for example Dutch. Leave empty for the "
+      "default: English with the built-in voices. Use it with a voice that speaks "
+      "that language.",
+      "llm", "str", nullable=True)
+    f("system_prompt_extra", "Extra Instructions",
+      "Optional text added to the assistant's instructions on every reply, "
+      "for example when it must check a tool before answering.",
+      "llm", "str", nullable=True)
     f("ollama_base_url", "Ollama URL", "Ollama server base URL",
       "llm", "str")
     f("llm_chat_timeout_sec", "Chat Timeout", "Max seconds for chat responses",

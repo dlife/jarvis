@@ -286,6 +286,19 @@ See [full MCP setup guide](#mcp-integrations) below.
 
 </details>
 
+## Reply language and extra instructions
+
+Jarvis replies in English by default, because the built-in voices are English. To get replies in another language, choose a voice that speaks it and set the language:
+
+```json
+{
+  "reply_language": "Dutch",
+  "tts_piper_model_path": "~/.local/share/jarvis/models/piper/nl_BE-nathalie-medium.onnx"
+}
+```
+
+`system_prompt_extra` adds your own text to the assistant's instructions on every reply. Smaller models sometimes answer questions about your home from guesswork instead of calling a tool; an instruction such as "Use a tool to check the state of the house before answering, and never invent a status" helps.
+
 ## Secrets in the system keyring
 
 API keys and tokens can live in the operating system credential store (Windows Credential Manager, macOS Keychain, Secret Service on Linux) instead of `config.json`. The config file then holds only a reference.

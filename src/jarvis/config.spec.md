@@ -23,3 +23,7 @@ A config value of the form `keyring:<service>/<name>`, or `keyring:<name>` for t
 Resolution never writes to the config file. A reference whose secret is missing, or whose keyring is unavailable, resolves to an empty string; the reference text is never used as a credential. Diagnostics name the service and secret name only, never the value.
 
 `load_config()` and desktop configuration reads return the saved values, so the settings window and setup wizard show and preserve references as written. `python -m jarvis.secret_store set|delete <name>` manages stored secrets; `set` reads the value from a hidden prompt and prints the reference to place in the config.
+
+## Reply language and extra instructions
+
+`reply_language` and `system_prompt_extra` default to empty strings and are trimmed on load. A non-empty `reply_language` makes the chat model's system message instruct it to respond in that language regardless of the user's language, in place of the English instruction that applies when the text-to-speech engine is Piper or Chatterbox. `system_prompt_extra` is appended to the same system message verbatim. Both reach every reply turn through the typed Settings.
